@@ -16,28 +16,36 @@ namespace LeRestauranteApi.Controllers
         [Route("{id:int}")]
         public async Task<ActionResult<Categoria>> Delete([FromServices] DataContext context, int id)
         {
-            var categoria = await context.Categorias.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if(categoria != null)
+            //carrega categoria por id
+            var categoria = await context.Categorias
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(x => x.Id == id);
+            if(categoria != null)//se encontrou
             {
-                var produtos = await context.Produtos.Include(x => x.Categoria).AsNoTracking().Where(x => x.FornecedorId == id).ToListAsync();
-                if (produtos != null && produtos.Count > 0 ) {
+                //verifica se tem algum produto relacionado
+                var produtos = await context.Produtos
+                                    .AsNoTracking()
+                                    .Where(x => x.CategoriaId == id)
+                                    .ToListAsync();
+                if (produtos != null && produtos.Count > 0 ) {//se tiver, emite mensagem
                     return BadRequest("Não é possível remover. Existem produtos relacionados à categoria.");
                 } else
-                {
+                {//se nao tiver, remove
                     context.Categorias.Remove(categoria);
                     await context.SaveChangesAsync();
                 }
             } else 
-            {
+            {//se nao encontrou retorna notFound
                 return NotFound();
             }
-            return Ok("Categoria removida");
+            return Ok("Categoria removida");//se removeu retorna ok
         }
 
         [HttpGet]
         [Route("")]
         public async Task<ActionResult<List<Categoria>>> Get([FromServices] DataContext context)
         {
+            //lista todas as categorias
             var categorias = await context.Categorias.ToListAsync();
             return categorias;
         }
@@ -47,14 +55,14 @@ namespace LeRestauranteApi.Controllers
         public async Task<ActionResult<Categoria>> Post(
             [FromServices] DataContext context,
             [FromBody] Categoria model)
-        {
-            if (ModelState.IsValid)
+        {//cadastra categoria
+            if (ModelState.IsValid)//se o model for valido
             {
-                context.Categorias.Add(model);
-                await context.SaveChangesAsync();
-                return model;
+                context.Categorias.Add(model);//faz um "insert"
+                await context.SaveChangesAsync();//salva
+                return model;//retorna categoria salva
             } else 
-            {
+            {//se nao for valido retorna erro
                 return BadRequest(ModelState);
             }
         }

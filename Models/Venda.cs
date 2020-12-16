@@ -8,7 +8,7 @@ namespace LeRestauranteApi.Models
     {
         [Key]
         public int Id { get; set; }
-        public int ClienteId { get; set; }
+        public int ClienteId { get; set; }//relacao one to many com cliente
         public Cliente Cliente { get; set; }
         public decimal TotalVenda { get; set; }
        

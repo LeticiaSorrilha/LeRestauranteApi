@@ -21,12 +21,12 @@ namespace LeRestauranteApi.Models
 
         [Required(ErrorMessage="Este campo é obrigatório")]
         [Range(1, int.MaxValue, ErrorMessage="Categoria inválida.")]
-        public int CategoriaId { get; set; }
+        public int CategoriaId { get; set; }//relacao one to many com categoria
         public Categoria Categoria { get; set; }
 
         [Required(ErrorMessage="Este campo é obrigatório")]
         [Range(1, int.MaxValue, ErrorMessage="Fornecedor inválido.")]
-        public int FornecedorId { get; set; }
+        public int FornecedorId { get; set; }//relacao one to many com fornecedor
         public Fornecedor Fornecedor { get; set; }
 
         [Required(ErrorMessage="Este campo é obrigatório")]
